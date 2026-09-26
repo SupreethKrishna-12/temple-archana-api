@@ -103,7 +103,10 @@ public class PoojaService {
 		public long countByGotram(String gotram) {
 			return devoteeRepository.countByGotram(gotram);
 		}
-		
+	//fetch devotee by email
+		public List<DevotesNames> getDevoteeByEmail(String email){
+			return devoteeRepository.findByEmail(email);
+		}
 	//update students 
 	public List<DevotesNames> updateDevotesByRaashi(DevotesNames updatedRequest,String raashi){
 		for(DevotesNames name:names) {

@@ -45,4 +45,6 @@ public interface DevoteeRepository extends JpaRepository<DevotesNames, Long> {
 	
 	long countByGotram(String gotram);
 	
+	List<DevotesNames> findByEmail(String email);
+	
 }
