@@ -107,7 +107,7 @@ public class PoojaApi {
     public long getdevoteecountBygotram(@PathVariable String gotram) {
     	return poojaService.countByGotram(gotram);
     }
-    @GetMapping("/allStudents/find-email/{email}")
+    @GetMapping("/allStudents/email-search/{email}")
     public List<DevotesNames> getDevoteeByEmail(@PathVariable String email){
     	return poojaService.getDevoteeByEmail(email);
     }
