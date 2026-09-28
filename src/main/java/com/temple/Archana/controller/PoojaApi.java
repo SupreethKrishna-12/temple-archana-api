@@ -3,6 +3,7 @@ package com.temple.Archana.controller;
 import com.temple.Archana.ArchanaApplication;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -111,6 +112,10 @@ public class PoojaApi {
     public List<DevotesNames> getDevoteeByEmail(@PathVariable String email){
     	return poojaService.getDevoteeByEmail(email);
     }
+    @GetMapping("/allStudents/id/{id}")
+    public Optional<DevotesNames> getDevoteeById(@PathVariable Long id) {
+    	return poojaService.getDevoteeById(id);
+    }
     
 	//PostMapping
 	@PostMapping("/addStudent")
@@ -138,6 +143,21 @@ public class PoojaApi {
 		}
 		return ResponseEntity.ok(results);
 	}
+	
+	@PutMapping("/updateStudents/id/{id}")
+	public ResponseEntity<DevotesNames> updateStudentsById(@Valid @RequestBody  DevotesNames devotee, @PathVariable Long id){
+		
+	 DevotesNames result = poojaService.updateDevoteeById(devotee, id);
+	 	
+	 	return ResponseEntity.ok(result);
+	}
+	
+	@DeleteMapping("/deleteStudent/id/{id}")
+	public ResponseEntity<String> deleteDevoteeById(@PathVariable Long id){
+		String message =  poojaService.deleteDevoteeById(id);
+		return ResponseEntity.ok(message);
+	}
+	
 	
 	//DeleteMapping
 	@DeleteMapping("/deleteStudents/{Gotram}")
