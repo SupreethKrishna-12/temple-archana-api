@@ -2,6 +2,7 @@ package com.temple.Archana.service;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
@@ -107,6 +108,15 @@ public class PoojaService {
 		public List<DevotesNames> getDevoteeByEmail(String email){
 			return devoteeRepository.findByEmail(email);
 		}
+	//fetch devotee by id
+		public Optional<DevotesNames> getDevoteeById(Long id) {
+			Optional<DevotesNames> devotee = devoteeRepository.findById(id);
+			if(devotee.isEmpty()) {
+				 throw new DevoteeNotFoundException("Devotee with "+id+" id not found");
+			}
+			return devotee;
+		}
+		
 	//update students 
 	public List<DevotesNames> updateDevotesByRaashi(DevotesNames updatedRequest,String raashi){
 		for(DevotesNames name:names) {
@@ -118,6 +128,25 @@ public class PoojaService {
 			}
 		}
 		return null;
+	}
+	
+	public DevotesNames updateDevoteeById(DevotesNames devotee,Long id) {
+		Optional<DevotesNames> existingDevotee = devoteeRepository.findById(id);
+		
+		if(existingDevotee.isEmpty()) {
+			throw new DevoteeNotFoundException("Devote with "+id+ " id not found");
+		}
+		DevotesNames existing = existingDevotee.get();
+		
+		existing.setGotram(devotee.getGotram());
+		 existing.setNakshathram(devotee.getNakshathram());
+		    existing.setRaashi(devotee.getRaashi());
+		    existing.setAge(devotee.getAge());
+		    existing.setAmount(devotee.getAmount());
+		    existing.setEmail(devotee.getEmail());
+		    
+		    return devoteeRepository.save(existing);
+	
 	}
 	
 	//Add Devotee by post mapping
@@ -135,16 +164,22 @@ public class PoojaService {
 	}
 	
 	
+	public String deleteDevoteeById(Long id) {
+		Optional<DevotesNames> results = devoteeRepository.findById(id);
+		
+		if(results.isEmpty()) {
+			throw new DevoteeNotFoundException("Devotee with id "+ id +" not found");
+		}
+		 devoteeRepository.deleteById(id);
+		 return "Deleted Devotee having id "+ id +" successfully";
+		
+	}
 
 	
 	public String deleteStudent(String gotram) {
-
 	    Iterator<DevotesNames> iterator = names.iterator();
-
 	    while (iterator.hasNext()) {
-
 	        DevotesNames name = iterator.next();
-
 	        if (name.getGotram().equals(gotram)) {
 	            iterator.remove();
 	            return "Deleted Successfully";
