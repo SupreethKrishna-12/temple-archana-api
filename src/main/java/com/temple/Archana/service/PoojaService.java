@@ -151,16 +151,12 @@ public class PoojaService {
 	
 	//Add Devotee by post mapping
 	public DevotesNames addStudent(DevotesNames newDevote) {
-		
 		return devoteeRepository.save(newDevote);
-		
 	}
 	
 	//Create Student 
-	public DevotesNames createStudent(DevotesNames createDevotee) {
-		
-		return devoteeRepository.save(createDevotee);
-		
+	public DevotesNames createStudent(DevotesNames createDevotee) {		
+		return devoteeRepository.save(createDevotee);		
 	}
 	
 	

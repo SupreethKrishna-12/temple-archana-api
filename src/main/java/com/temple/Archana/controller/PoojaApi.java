@@ -120,7 +120,6 @@ public class PoojaApi {
 	//PostMapping
 	@PostMapping("/addStudent")
 	public ResponseEntity<DevotesNames> addStudent(@Valid @RequestBody DevotesNames newDevote) {
-		
 	  DevotesNames	results = poojaService.addStudent(newDevote);
 	  return ResponseEntity.status(HttpStatus.CREATED).body(results);
 	}
