@@ -2,6 +2,8 @@ package com.temple.Archana.repository;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -46,5 +48,7 @@ public interface DevoteeRepository extends JpaRepository<DevotesNames, Long> {
 	long countByGotram(String gotram);
 	
 	List<DevotesNames> findByEmail(String email);
+	
+	Page<DevotesNames> findByAgeBetween(int min_age, int max_age, Pageable pageable);
 	
 }

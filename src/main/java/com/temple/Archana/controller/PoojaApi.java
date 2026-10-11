@@ -1,12 +1,11 @@
 package com.temple.Archana.controller;
 
-import com.temple.Archana.ArchanaApplication;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,8 +13,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.temple.Archana.dto.CreateDevoteeRequestDTO;
+import com.temple.Archana.dto.DevoteeResponseDTO;
 import com.temple.Archana.model.DevotesNames;
 import com.temple.Archana.service.PoojaService;
 
@@ -115,6 +117,23 @@ public class PoojaApi {
     @GetMapping("/allStudents/id/{id}")
     public Optional<DevotesNames> getDevoteeById(@PathVariable Long id) {
     	return poojaService.getDevoteeById(id);
+    }
+    
+    //pagination    
+    @GetMapping("/devotees")
+    public Page<DevotesNames> getDevotees(Pageable pageable) {
+        return poojaService.getAllDevotees(pageable);
+    }
+    //DTO
+    @GetMapping("/devotees/by-age")
+    public Page<DevoteeResponseDTO> getByAgeBetween(@RequestParam int minage, @RequestParam int maxage, Pageable pageable){
+    	return poojaService.getByagebetween(minage, maxage, pageable);
+    }
+    //DTO create devotee
+    @PostMapping("/devotees/create")
+    public ResponseEntity<DevoteeResponseDTO> createDevotee(@Valid @RequestBody CreateDevoteeRequestDTO request){
+    	DevoteeResponseDTO devotee = poojaService.createDevotee(request);
+    	return ResponseEntity.status(HttpStatus.CREATED).body(devotee);
     }
     
 	//PostMapping

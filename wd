@@ -1,0 +1,50 @@
+[1mdiff --git a/src/main/java/com/temple/Archana/controller/PoojaApi.java b/src/main/java/com/temple/Archana/controller/PoojaApi.java[m
+[1mindex 250b6ab..d295311 100644[m
+[1m--- a/src/main/java/com/temple/Archana/controller/PoojaApi.java[m
+[1m+++ b/src/main/java/com/temple/Archana/controller/PoojaApi.java[m
+[36m@@ -120,7 +120,6 @@[m [mpublic class PoojaApi {[m
+ 	//PostMapping[m
+ 	@PostMapping("/addStudent")[m
+ 	public ResponseEntity<DevotesNames> addStudent(@Valid @RequestBody DevotesNames newDevote) {[m
+[31m-		[m
+ 	  DevotesNames	results = poojaService.addStudent(newDevote);[m
+ 	  return ResponseEntity.status(HttpStatus.CREATED).body(results);[m
+ 	}[m
+[1mdiff --git a/src/main/java/com/temple/Archana/service/PoojaService.java b/src/main/java/com/temple/Archana/service/PoojaService.java[m
+[1mindex ec026f7..34808e7 100644[m
+[1m--- a/src/main/java/com/temple/Archana/service/PoojaService.java[m
+[1m+++ b/src/main/java/com/temple/Archana/service/PoojaService.java[m
+[36m@@ -151,16 +151,12 @@[m [mpublic class PoojaService {[m
+ 	[m
+ 	//Add Devotee by post mapping[m
+ 	public DevotesNames addStudent(DevotesNames newDevote) {[m
+[31m-		[m
+ 		return devoteeRepository.save(newDevote);[m
+[31m-		[m
+ 	}[m
+ 	[m
+ 	//Create Student [m
+[31m-	public DevotesNames createStudent(DevotesNames createDevotee) {[m
+[31m-		[m
+[31m-		return devoteeRepository.save(createDevotee);[m
+[31m-		[m
+[32m+[m	[32mpublic DevotesNames createStudent(DevotesNames createDevotee) {[m[41m		[m
+[32m+[m		[32mreturn devoteeRepository.save(createDevotee);[m[41m		[m
+ 	}[m
+ 	[m
+ 	[m
+[1mdiff --git a/src/main/resources/application.properties b/src/main/resources/application.properties[m
+[1mindex 095f2a0..3d606b4 100644[m
+[1m--- a/src/main/resources/application.properties[m
+[1m+++ b/src/main/resources/application.properties[m
+[36m@@ -5,8 +5,8 @@[m [mlogging.console.enabled=true[m
+ [m
+ [m
+ spring.datasource.url=jdbc:mysql://localhost:3306/temple_archana[m
+[31m-spring.datasource.username=${DB_USERNAME}[m
+[31m-spring.datasource.password=${DB_PASSWORD}[m
+[32m+[m[32mspring.datasource.username=root[m
+[32m+[m[32mspring.datasource.password=Supreeth$12[m
+ [m
+ spring.jpa.hibernate.ddl-auto=update[m
+ spring.jpa.show-sql=true[m

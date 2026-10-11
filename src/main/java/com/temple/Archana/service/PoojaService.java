@@ -1,11 +1,16 @@
 package com.temple.Archana.service;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import com.temple.Archana.dto.CreateDevoteeRequestDTO;
+import com.temple.Archana.dto.DevoteeResponseDTO;
 import com.temple.Archana.exception.DevoteeNotFoundException;
 import com.temple.Archana.model.DevotesNames;
 import com.temple.Archana.repository.DevoteeRepository;
@@ -115,6 +120,32 @@ public class PoojaService {
 				 throw new DevoteeNotFoundException("Devotee with "+id+" id not found");
 			}
 			return devotee;
+		}
+		
+	//pagination
+		public Page<DevotesNames> getAllDevotees(Pageable page){
+			return devoteeRepository.findAll(page);
+		}
+	//DTO
+		public Page<DevoteeResponseDTO> getByagebetween(int minage, int maxage, Pageable pageable){
+			Page<DevotesNames> devoteesPage = devoteeRepository.findByAgeBetween(minage, maxage, pageable);
+			return devoteesPage.map(devotee -> new DevoteeResponseDTO(devotee.getId(), devotee.getGotram(), devotee.getNakshathram(), devotee.getRaashi(), devotee.getAge()));		
+		}
+	//DTO request 
+		public DevoteeResponseDTO createDevotee(CreateDevoteeRequestDTO request){
+			 DevotesNames devotees = new DevotesNames();
+			 
+			 devotees.setGotram(request.getGotram());
+			 devotees.setNakshathram(request.getNakshathram());
+			 devotees.setRaashi(request.getRaashi());
+			 devotees.setAge(request.getAge());
+			 devotees.setEmail(request.getEmail());
+			 devotees.setAmount(request.getAmount());
+			 
+			DevotesNames results = devoteeRepository.save(devotees);
+			
+			return new DevoteeResponseDTO(results.getId(),results.getGotram(),results.getNakshathram(),results.getRaashi(),results.getAge());
+			 
 		}
 		
 	//update students 

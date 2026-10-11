@@ -1,9 +1,15 @@
 package com.temple.Archana.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Max;
@@ -44,6 +50,10 @@ public class DevotesNames {
 	@NotNull(message = "Amount is mandatory")
 	@Positive(message = "Amount shoud be positive")
 	private Double amount;
+	
+	@JsonIgnore
+	@OneToMany(mappedBy = "devotee")
+	private List<Pooja> poojas = new ArrayList<>();
 	
 	public DevotesNames(String gotram,String nakshathram, String raashi,int age,String email,Double amount) {
 		this.gotram=gotram;
@@ -104,6 +114,12 @@ public class DevotesNames {
 	}
 	public void setAmount(Double amount) {
 		this.amount=amount;
+	}
+	public List<Pooja> getPoojas() {
+		return poojas;
+	}
+	public void setPoojas(List<Pooja> poojas) {
+		this.poojas = poojas;
 	}
 	
 }
