@@ -1,9 +1,6 @@
 package com.temple.Archana.service;
 
-import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -17,204 +14,250 @@ import com.temple.Archana.repository.DevoteeRepository;
 
 @Service
 public class PoojaService {
-	
-	private final DevoteeRepository devoteeRepository ;
-	
-	public PoojaService(DevoteeRepository devoteeRepository) {
-		this.devoteeRepository=devoteeRepository;
-	}
-	
-	private final List<DevotesNames> names = new ArrayList<>();
-	
-	 {
-	names.add(new DevotesNames("KowshikaGotram","AswiniNakshatram","MeshaRaashi",10,"kowshika@gmail.com",1007.0));
-	names.add(new DevotesNames("BaradwajaGotram","RevathiNakshatram","Meena Raashi",11,"baradwajaa@gmail.com",1006.9));
-	names.add(new DevotesNames("VishuGotram","RevathiNakshatram","Meena Raashi",12,"vishu@gmail.com",1005.0));
-	names.add(new DevotesNames("ShivaGotram","RevathiNakshatram","Meena Raashi",13,"shiva@gmail.com",1004.9));
-	names.add(new DevotesNames("KowdinyasaGotram","RevathiNakshatram","Meena Raashi",14,"kowdinyasa@gmail.com",1003.54));
-	names.add(new DevotesNames("NoGotram","RevathiNakshatram","Meena Raashi",15,"nogotram@gmail.com",1002.9));
-	}
 
-	 //fetch all students
-	public List<DevotesNames> getAllDetails(){
-		return devoteeRepository.findAll();
-	}
-	
-	//fetch students by gotram
-	public List<DevotesNames> getByGotram(String Gotram){
-		
-		return devoteeRepository.findByGotram(Gotram);
-	}
-	
-	//fetch students by nakshatram
-	public List<DevotesNames> getByNakshatram(String nakshathram){
-	
-	return	devoteeRepository.findByNakshathram(nakshathram);
-	}
-	
-	//fetch devotees on age
-		public List<DevotesNames> getByAgeGreaterThan(int age) {
-			return devoteeRepository.findByAgeGreaterThan(age);
-		}
-		
-	//fetch devotee by age using @Query 
-		public List<DevotesNames> getByAgethroughQueryparamenter(int age){
-			return devoteeRepository.findDevoteesOlderThan(age);
-		}
-	//fetch devotee by gotram and raashi
-		public List<DevotesNames> getByGotramandRaashi(String Gotram,String Raashi){
-			return devoteeRepository.findByGotramAndRaashi(Gotram, Raashi);
-		}
-	//fetch devotee by GR with query paramenter
-		public List<DevotesNames> getByGNwithQueryParamenter(String Gotram,String Raashi){
-			return devoteeRepository.getbyGRwithquery(Gotram, Raashi);
-		}
-	//fetch devotee by Gotram or Naksathram
-		public List<DevotesNames> getByGotramOrNakshathram(String Gothram,String Nakshathram){
-			return devoteeRepository.findByGotramOrNakshathram(Gothram, Nakshathram);
-		}
-	//fetch devotee by Gotram or Naksathram through query paramenter	
-		public List<DevotesNames> getbyGoNbyqueryparameter(String Gotram,String Nakshathram){
-			return devoteeRepository.getByGotramorNakshathrambyQuery(Gotram, Nakshathram);
-		}
-	//fetch devotee by between age 	
-		public List<DevotesNames> getByAgeBeween(int from_age,int to_age){
-			return devoteeRepository.findByAgeBetween(from_age, to_age);
-		}
-	//fetch devotee by between age through query 
-		public List<DevotesNames> getByagebetweenQuery(int from_age,int to_age){
-			return devoteeRepository.findByAgeBetweenQuery(from_age, to_age);
-		}
-	//fetch devotee by using containing method 
-		public List<DevotesNames> findByGotramContating(String text){
-			return devoteeRepository.findByGotramContaining(text);
-		}
-	//fetch devotee by startingwith
-		public List<DevotesNames> findByGotramStartingwith(String text){
-			return devoteeRepository.findByGotramStartingWith(text);
-		}
-	//fetch devotee using Endingwith
-		public List<DevotesNames> getdevoteeEndingwith(String text){
-			return devoteeRepository.findByGotramEndingWith(text);
-		}
-	//fetch devotee using containg with ignore case
-		public List<DevotesNames> getGotramBycontaingIgnorecase(String text){
-			return devoteeRepository.findByGotramContainingIgnoreCase(text);
-		}
-	//check devotee exsists by email
-		public boolean isEmailExists(String text) {
-			return devoteeRepository.existsByEmail(text);
-		}
-	//count devotee by gotram
-		public long countByGotram(String gotram) {
-			return devoteeRepository.countByGotram(gotram);
-		}
-	//fetch devotee by email
-		public List<DevotesNames> getDevoteeByEmail(String email){
-			return devoteeRepository.findByEmail(email);
-		}
-	//fetch devotee by id
-		public Optional<DevotesNames> getDevoteeById(Long id) {
-			Optional<DevotesNames> devotee = devoteeRepository.findById(id);
-			if(devotee.isEmpty()) {
-				 throw new DevoteeNotFoundException("Devotee with "+id+" id not found");
-			}
-			return devotee;
-		}
-		
-	//pagination
-		public Page<DevotesNames> getAllDevotees(Pageable page){
-			return devoteeRepository.findAll(page);
-		}
-	//DTO
-		public Page<DevoteeResponseDTO> getByagebetween(int minage, int maxage, Pageable pageable){
-			Page<DevotesNames> devoteesPage = devoteeRepository.findByAgeBetween(minage, maxage, pageable);
-			return devoteesPage.map(devotee -> new DevoteeResponseDTO(devotee.getId(), devotee.getGotram(), devotee.getNakshathram(), devotee.getRaashi(), devotee.getAge()));		
-		}
-	//DTO request 
-		public DevoteeResponseDTO createDevotee(CreateDevoteeRequestDTO request){
-			 DevotesNames devotees = new DevotesNames();
-			 
-			 devotees.setGotram(request.getGotram());
-			 devotees.setNakshathram(request.getNakshathram());
-			 devotees.setRaashi(request.getRaashi());
-			 devotees.setAge(request.getAge());
-			 devotees.setEmail(request.getEmail());
-			 devotees.setAmount(request.getAmount());
-			 
-			DevotesNames results = devoteeRepository.save(devotees);
-			
-			return new DevoteeResponseDTO(results.getId(),results.getGotram(),results.getNakshathram(),results.getRaashi(),results.getAge());
-			 
-		}
-		
-	//update students 
-	public List<DevotesNames> updateDevotesByRaashi(DevotesNames updatedRequest,String raashi){
-		for(DevotesNames name:names) {
-			if(name.getRaashi().equals(raashi)) {
-				name.setGotram(updatedRequest.getGotram());
-				name.setNakshathram(updatedRequest.getNakshathram());
-				name.setRaashi(updatedRequest.getRaashi());
-				return names;
-			}
-		}
-		return null;
-	}
-	
-	public DevotesNames updateDevoteeById(DevotesNames devotee,Long id) {
-		Optional<DevotesNames> existingDevotee = devoteeRepository.findById(id);
-		
-		if(existingDevotee.isEmpty()) {
-			throw new DevoteeNotFoundException("Devote with "+id+ " id not found");
-		}
-		DevotesNames existing = existingDevotee.get();
-		
-		existing.setGotram(devotee.getGotram());
-		 existing.setNakshathram(devotee.getNakshathram());
-		    existing.setRaashi(devotee.getRaashi());
-		    existing.setAge(devotee.getAge());
-		    existing.setAmount(devotee.getAmount());
-		    existing.setEmail(devotee.getEmail());
-		    
-		    return devoteeRepository.save(existing);
-	
-	}
-	
-	//Add Devotee by post mapping
-	public DevotesNames addStudent(DevotesNames newDevote) {
-		return devoteeRepository.save(newDevote);
-	}
-	
-	//Create Student 
-	public DevotesNames createStudent(DevotesNames createDevotee) {		
-		return devoteeRepository.save(createDevotee);		
-	}
-	
-	
-	public String deleteDevoteeById(Long id) {
-		Optional<DevotesNames> results = devoteeRepository.findById(id);
-		
-		if(results.isEmpty()) {
-			throw new DevoteeNotFoundException("Devotee with id "+ id +" not found");
-		}
-		 devoteeRepository.deleteById(id);
-		 return "Deleted Devotee having id "+ id +" successfully";
-		
-	}
+    private final DevoteeRepository devoteeRepository;
 
-	
-	public String deleteStudent(String gotram) {
-	    Iterator<DevotesNames> iterator = names.iterator();
-	    while (iterator.hasNext()) {
-	        DevotesNames name = iterator.next();
-	        if (name.getGotram().equals(gotram)) {
-	            iterator.remove();
-	            return "Deleted Successfully";
-	        }
-	    }
+    public PoojaService(DevoteeRepository devoteeRepository) {
+        this.devoteeRepository = devoteeRepository;
+    }
 
-	    return "Devotee Not Found";
-	}
-	
-	
+    // ---------- READ ALL ----------
+
+    public List<DevotesNames> getAllDetails() {
+        return devoteeRepository.findAll();
+    }
+
+    public Page<DevotesNames> getAllDevotees(Pageable pageable) {
+        return devoteeRepository.findAll(pageable);
+    }
+
+    public List<DevoteeResponseDTO> getAllDevoteesAsDTO() {
+        return devoteeRepository.findAll()
+                .stream()
+                .map(this::toResponseDTO)
+                .toList();
+    }
+
+    // ---------- BASIC SEARCHES ----------
+
+    public List<DevotesNames> getByGotram(String gotram) {
+        return devoteeRepository.findByGotram(gotram);
+    }
+
+    public List<DevotesNames> getByNakshathram(String nakshathram) {
+        return devoteeRepository.findByNakshathram(nakshathram);
+    }
+
+    public List<DevotesNames> getDevoteeByEmail(String email) {
+        return devoteeRepository.findByEmail(email);
+    }
+
+    public DevotesNames getDevoteeById(Long id) {
+        return devoteeRepository.findById(id)
+                .orElseThrow(() -> new DevoteeNotFoundException(
+                        "Devotee with id " + id + " not found"
+                ));
+    }
+
+    // ---------- AGE QUERIES ----------
+
+    public List<DevotesNames> getByAgeGreaterThan(int age) {
+        return devoteeRepository.findByAgeGreaterThan(age);
+    }
+
+    public List<DevotesNames> getOlderThanUsingQuery(int age) {
+        return devoteeRepository.findOlderThanUsingQuery(age);
+    }
+
+    public List<DevotesNames> getByAgeBetween(
+            int minAge,
+            int maxAge
+    ) {
+        return devoteeRepository.findByAgeBetween(minAge, maxAge);
+    }
+
+    public List<DevotesNames> getByAgeBetweenUsingQuery(
+            int minAge,
+            int maxAge
+    ) {
+        return devoteeRepository.findByAgeBetweenUsingQuery(
+                minAge, maxAge
+        );
+    }
+
+    // ---------- GOTRAM / RAASHI QUERIES ----------
+
+    public List<DevotesNames> getByGotramAndRaashi(
+            String gotram,
+            String raashi
+    ) {
+        return devoteeRepository.findByGotramAndRaashi(
+                gotram, raashi
+        );
+    }
+
+    public List<DevotesNames> getByGotramAndRaashiUsingQuery(
+            String gotram,
+            String raashi
+    ) {
+        return devoteeRepository.findByGotramAndRaashiUsingQuery(
+                gotram, raashi
+        );
+    }
+
+    public List<DevotesNames> getByGotramOrNakshathram(
+            String gotram,
+            String nakshathram
+    ) {
+        return devoteeRepository.findByGotramOrNakshathram(
+                gotram, nakshathram
+        );
+    }
+
+    public List<DevotesNames> getByGotramOrNakshathramUsingQuery(
+            String gotram,
+            String nakshathram
+    ) {
+        return devoteeRepository.findByGotramOrNakshathramUsingQuery(
+                gotram, nakshathram
+        );
+    }
+
+    // ---------- GOTRAM TEXT SEARCHES ----------
+
+    public List<DevotesNames> findByGotramContaining(String text) {
+        return devoteeRepository.findByGotramContaining(text);
+    }
+
+    public List<DevotesNames> findByGotramStartingWith(String text) {
+        return devoteeRepository.findByGotramStartingWith(text);
+    }
+
+    public List<DevotesNames> findByGotramEndingWith(String text) {
+        return devoteeRepository.findByGotramEndingWith(text);
+    }
+
+    public List<DevotesNames> findByGotramContainingIgnoreCase(
+            String text
+    ) {
+        return devoteeRepository.findByGotramContainingIgnoreCase(text);
+    }
+
+    // ---------- EXISTENCE AND COUNT ----------
+
+    public boolean isEmailExists(String email) {
+        return devoteeRepository.existsByEmail(email);
+    }
+
+    public long countByGotram(String gotram) {
+        return devoteeRepository.countByGotram(gotram);
+    }
+
+    // ---------- PAGINATION + FILTERING + DTO ----------
+
+    public Page<DevoteeResponseDTO> getDevoteesByAgeBetween(
+            int minAge,
+            int maxAge,
+            Pageable pageable
+    ) {
+        return devoteeRepository
+                .findByAgeBetween(minAge, maxAge, pageable)
+                .map(this::toResponseDTO);
+    }
+
+    // ---------- CREATE ----------
+
+    public DevoteeResponseDTO createDevotee(
+            CreateDevoteeRequestDTO request
+    ) {
+        DevotesNames devotee = new DevotesNames();
+
+        devotee.setGotram(request.getGotram());
+        devotee.setNakshathram(request.getNakshathram());
+        devotee.setRaashi(request.getRaashi());
+        devotee.setAge(request.getAge());
+        devotee.setEmail(request.getEmail());
+        devotee.setAmount(request.getAmount());
+
+        DevotesNames saved = devoteeRepository.save(devotee);
+
+        return toResponseDTO(saved);
+    }
+
+    // Shared save method for the older entity-based endpoints.
+    public DevotesNames saveDevotee(DevotesNames devotee) {
+        return devoteeRepository.save(devotee);
+    }
+
+    // ---------- UPDATE ----------
+
+    public DevotesNames updateDevoteeById(
+            DevotesNames request,
+            Long id
+    ) {
+        DevotesNames existing = getDevoteeById(id);
+
+        existing.setGotram(request.getGotram());
+        existing.setNakshathram(request.getNakshathram());
+        existing.setRaashi(request.getRaashi());
+        existing.setAge(request.getAge());
+        existing.setAmount(request.getAmount());
+        existing.setEmail(request.getEmail());
+
+        return devoteeRepository.save(existing);
+    }
+
+    // Legacy endpoint: updates the first record matching Raashi.
+    public DevotesNames updateDevoteeByRaashi(
+            DevotesNames request,
+            String raashi
+    ) {
+        DevotesNames existing = devoteeRepository
+                .findFirstByRaashi(raashi)
+                .orElseThrow(() -> new DevoteeNotFoundException(
+                        "Devotee with Raashi " + raashi + " not found"
+                ));
+
+        existing.setGotram(request.getGotram());
+        existing.setNakshathram(request.getNakshathram());
+        existing.setRaashi(request.getRaashi());
+
+        return devoteeRepository.save(existing);
+    }
+
+    // ---------- DELETE ----------
+
+    public String deleteDevoteeById(Long id) {
+        DevotesNames devotee = getDevoteeById(id);
+
+        devoteeRepository.delete(devotee);
+
+        return "Deleted devotee with id " + id + " successfully";
+    }
+
+    // Legacy endpoint: deletes the first matching Gotram record.
+    public String deleteDevoteeByGotram(String gotram) {
+        List<DevotesNames> matches =
+                devoteeRepository.findByGotram(gotram);
+
+        if (matches.isEmpty()) {
+            return "Devotee Not Found";
+        }
+
+        devoteeRepository.delete(matches.get(0));
+
+        return "Deleted Successfully";
+    }
+
+    // ---------- ENTITY TO DTO MAPPING ----------
+
+    private DevoteeResponseDTO toResponseDTO(DevotesNames devotee) {
+        return new DevoteeResponseDTO(
+                devotee.getId(),
+                devotee.getGotram(),
+                devotee.getNakshathram(),
+                devotee.getRaashi(),
+                devotee.getAge()
+        );
+    }
 }

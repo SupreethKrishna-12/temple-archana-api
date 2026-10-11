@@ -1,6 +1,7 @@
 package com.temple.Archana.repository;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -10,45 +11,84 @@ import org.springframework.data.repository.query.Param;
 
 import com.temple.Archana.model.DevotesNames;
 
-public interface DevoteeRepository extends JpaRepository<DevotesNames, Long> {
+public interface DevoteeRepository
+        extends JpaRepository<DevotesNames, Long> {
 
-	List<DevotesNames> findByGotram(String gotram);
-	List<DevotesNames> findByNakshathram(String nakshathram);
-	
-	List<DevotesNames> findByAgeGreaterThan(int age);
-	
-	@Query("SELECT d FROM DevotesNames d WHERE d.age > :age")
-	List<DevotesNames> findDevoteesOlderThan(@Param("age") int age);
-	
-	List<DevotesNames> findByGotramAndRaashi(String gotram,String raashi);
-	
-	@Query("select d from DevotesNames d where d.gotram = :gotram and d.raashi = :raashi")
-	List<DevotesNames> getbyGRwithquery(@Param("gotram") String gotram, @Param("raashi") String raashi);
-	
-	List<DevotesNames> findByGotramOrNakshathram(String Gotram,String Nakshathram);
+    // Basic searches
+    List<DevotesNames> findByGotram(String gotram);
 
-	@Query("SELECT d from DevotesNames d where d.gotram = :gotram or d.nakshathram = :nakshathram")
-	List<DevotesNames> getByGotramorNakshathrambyQuery(@Param("gotram") String gotram, @Param("nakshathram") String nakshathram);
-	
-	List<DevotesNames> findByAgeBetween(int from_age, int to_age);
-	
-	@Query("select d from DevotesNames d where d.age between :from_age and :to_age")
-	List<DevotesNames> findByAgeBetweenQuery(@Param("from_age") int from_age, @Param("to_age") int to_age);
-	
-	List<DevotesNames> findByGotramContaining(String text);
-	
-	List<DevotesNames> findByGotramStartingWith(String text);
-	
-	List<DevotesNames> findByGotramEndingWith(String text);
-	
-	List<DevotesNames> findByGotramContainingIgnoreCase(String text);
-	
-	boolean existsByEmail(String email);
-	
-	long countByGotram(String gotram);
-	
-	List<DevotesNames> findByEmail(String email);
-	
-	Page<DevotesNames> findByAgeBetween(int min_age, int max_age, Pageable pageable);
-	
+    List<DevotesNames> findByNakshathram(String nakshathram);
+
+    List<DevotesNames> findByEmail(String email);
+
+    Optional<DevotesNames> findFirstByRaashi(String raashi);
+
+    // Age queries
+    List<DevotesNames> findByAgeGreaterThan(int age);
+
+    List<DevotesNames> findByAgeBetween(int minAge, int maxAge);
+
+    Page<DevotesNames> findByAgeBetween(
+            int minAge,
+            int maxAge,
+            Pageable pageable
+    );
+
+    @Query("SELECT d FROM DevotesNames d WHERE d.age > :age")
+    List<DevotesNames> findOlderThanUsingQuery(
+            @Param("age") int age
+    );
+
+    @Query("""
+           SELECT d FROM DevotesNames d
+           WHERE d.age BETWEEN :minAge AND :maxAge
+           """)
+    List<DevotesNames> findByAgeBetweenUsingQuery(
+            @Param("minAge") int minAge,
+            @Param("maxAge") int maxAge
+    );
+
+    // Gotram and Raashi queries
+    List<DevotesNames> findByGotramAndRaashi(
+            String gotram,
+            String raashi
+    );
+
+    @Query("""
+           SELECT d FROM DevotesNames d
+           WHERE d.gotram = :gotram AND d.raashi = :raashi
+           """)
+    List<DevotesNames> findByGotramAndRaashiUsingQuery(
+            @Param("gotram") String gotram,
+            @Param("raashi") String raashi
+    );
+
+    // Gotram or Nakshathram queries
+    List<DevotesNames> findByGotramOrNakshathram(
+            String gotram,
+            String nakshathram
+    );
+
+    @Query("""
+           SELECT d FROM DevotesNames d
+           WHERE d.gotram = :gotram OR d.nakshathram = :nakshathram
+           """)
+    List<DevotesNames> findByGotramOrNakshathramUsingQuery(
+            @Param("gotram") String gotram,
+            @Param("nakshathram") String nakshathram
+    );
+
+    // Text searches
+    List<DevotesNames> findByGotramContaining(String text);
+
+    List<DevotesNames> findByGotramStartingWith(String text);
+
+    List<DevotesNames> findByGotramEndingWith(String text);
+
+    List<DevotesNames> findByGotramContainingIgnoreCase(String text);
+
+    // Existence and count
+    boolean existsByEmail(String email);
+
+    long countByGotram(String gotram);
 }
