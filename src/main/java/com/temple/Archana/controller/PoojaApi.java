@@ -1,7 +1,6 @@
 package com.temple.Archana.controller;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -25,167 +24,268 @@ import jakarta.validation.Valid;
 
 @RestController
 public class PoojaApi {
-	
-	
-	private final PoojaService poojaService;
-	
-	PoojaApi(PoojaService poojaService){
-		this.poojaService=poojaService;
-	}
-	
-	//GetMapping 
-	@GetMapping("/allStudents")
-	public List<DevotesNames> getAllDetail() {
-		return poojaService.getAllDetails();
-	}
-	
-	@GetMapping("/allStudents/{Gotram}")
-	public List<DevotesNames> getDetailsByGotram(@Valid @PathVariable String Gotram){	
-		return poojaService.getByGotram(Gotram) ;	
-	}
-		
-	
-	@GetMapping("/allStudents/nakshatram/{nakshatram}")
-	public List<DevotesNames> getStudentswithnakshaream(@PathVariable String nakshatram){	
-		return poojaService.getByNakshatram(nakshatram);
-	}
 
-    @GetMapping("/allStudents/age/{age}")
-    public List<DevotesNames> getByAgeGreaterThan(@PathVariable int age) {
-    	return poojaService.getByAgeGreaterThan(age);
+    private final PoojaService poojaService;
+
+    public PoojaApi(PoojaService poojaService) {
+        this.poojaService = poojaService;
     }
-    
-    @GetMapping("/allStudents/age/query/{age}")
-    public List<DevotesNames> getByAgethroughQueryparamenter(@PathVariable int age){
-    	return poojaService.getByAgethroughQueryparamenter(age);
+
+    // ---------- READ ALL ----------
+
+    @GetMapping("/allStudents")
+    public List<DevotesNames> getAllDetails() {
+        return poojaService.getAllDetails();
     }
-    
-    @GetMapping("/allStudents/GR/{Gotram}/{Raashi}")
-    public List<DevotesNames> getByGotramandraashi(@PathVariable String Gotram, @PathVariable String Raashi){
-    	return poojaService.getByGotramandRaashi(Gotram, Raashi);
-    }
-    
-    @GetMapping("/allStudents/GRquery/{Gotram}/{Raashi}")
-    public List<DevotesNames> getByGRwithQuery(@PathVariable String Gotram,@PathVariable String Raashi){
-    	return poojaService.getByGNwithQueryParamenter(Gotram, Raashi);
-    }
-    
-    @GetMapping("/allStudents/GON/{Gotram},{Nakshatram}")
-    public List<DevotesNames> getByGothramOrNakshathram(@PathVariable String Gotram,@PathVariable String Nakshatram){
-    	return poojaService.getByGotramOrNakshathram(Gotram, Nakshatram);
-    }
-    @GetMapping("/allStudents/ageBetween/{from_age}/{to_age}")
-    public List<DevotesNames> getByagebetween(@PathVariable int from_age,@PathVariable int to_age){
-    	return poojaService.getByAgeBeween(from_age, to_age);
-    }
-    @GetMapping("allStudents/ageBetweenQuery/{from_age}/{to_age}")
-    public List<DevotesNames> getByageBetweenQuery(@PathVariable int from_age, @PathVariable int to_age){
-    	return poojaService.getByagebetweenQuery(from_age, to_age);
-    }
-    @GetMapping("allStudents/GotramContaining/{text}")
-    public List<DevotesNames> findByGogramContaining(@PathVariable String text){
-    	return poojaService.findByGotramContating(text);
-    }
-    @GetMapping("/allStudents/GotramStartingWith/{text}")
-    public List<DevotesNames> findByGotramStartingwith(@PathVariable String text){
-    	return poojaService.findByGotramStartingwith(text);
-    }
-    @GetMapping("/allStudents/GotramEndingWith/{text}")
-    public List<DevotesNames> getbyGotramendingwith(@PathVariable String text){
-    	return poojaService.getdevoteeEndingwith(text);
-    }
-    @GetMapping("/allStudents/GotramContaingIgnoreCase/{text}")
-    	public List<DevotesNames> getbyGotramcontaningignoreCase(@PathVariable String text){
-    		return poojaService.getGotramBycontaingIgnorecase(text);
-    }
-    @GetMapping("/allStudents/GONQuery/{Gotram}/{Nakshatram}")
-    public List<DevotesNames> getByGONQuery(@PathVariable String Gotram,@PathVariable String Nakshatram){
-    	return poojaService.getbyGoNbyqueryparameter(Gotram, Nakshatram);
-    }
-    @GetMapping("/allStudents/EmailExists/{email}")
-    public boolean IsEmailExists(@PathVariable String email) {
-    	return poojaService.isEmailExists(email);
-    }
-    @GetMapping("/allStudents/countByGotram/{gotram}")
-    public long getdevoteecountBygotram(@PathVariable String gotram) {
-    	return poojaService.countByGotram(gotram);
-    }
-    @GetMapping("/allStudents/email-search/{email}")
-    public List<DevotesNames> getDevoteeByEmail(@PathVariable String email){
-    	return poojaService.getDevoteeByEmail(email);
-    }
-    @GetMapping("/allStudents/id/{id}")
-    public Optional<DevotesNames> getDevoteeById(@PathVariable Long id) {
-    	return poojaService.getDevoteeById(id);
-    }
-    
-    //pagination    
+
     @GetMapping("/devotees")
     public Page<DevotesNames> getDevotees(Pageable pageable) {
         return poojaService.getAllDevotees(pageable);
     }
-    //DTO
-    @GetMapping("/devotees/by-age")
-    public Page<DevoteeResponseDTO> getByAgeBetween(@RequestParam int minage, @RequestParam int maxage, Pageable pageable){
-    	return poojaService.getByagebetween(minage, maxage, pageable);
-    }
-    //DTO create devotee
-    @PostMapping("/devotees/create")
-    public ResponseEntity<DevoteeResponseDTO> createDevotee(@Valid @RequestBody CreateDevoteeRequestDTO request){
-    	DevoteeResponseDTO devotee = poojaService.createDevotee(request);
-    	return ResponseEntity.status(HttpStatus.CREATED).body(devotee);
-    }
-    
-	//PostMapping
-	@PostMapping("/addStudent")
-	public ResponseEntity<DevotesNames> addStudent(@Valid @RequestBody DevotesNames newDevote) {
-	  DevotesNames	results = poojaService.addStudent(newDevote);
-	  return ResponseEntity.status(HttpStatus.CREATED).body(results);
-	}
-	  
-	@PostMapping("/createStudents")
-	public ResponseEntity<DevotesNames> createDevotee(@RequestBody DevotesNames createDevotee) {
-		DevotesNames results =  poojaService.createStudent(createDevotee);
-		return ResponseEntity.status(HttpStatus.CREATED).body(results);
-	}
-	
 
-	
-	//PutMapping
-	@PutMapping("/updateStudents/{raashi}")
-	public ResponseEntity<List<DevotesNames>> updateDevotes(@RequestBody DevotesNames updatedRequest,@PathVariable String raashi){
-		
-		List<DevotesNames> results =  poojaService.updateDevotesByRaashi(updatedRequest, raashi);
-		if (results==null) {
-			return ResponseEntity.notFound().build();
-		}
-		return ResponseEntity.ok(results);
-	}
-	
-	@PutMapping("/updateStudents/id/{id}")
-	public ResponseEntity<DevotesNames> updateStudentsById(@Valid @RequestBody  DevotesNames devotee, @PathVariable Long id){
-		
-	 DevotesNames result = poojaService.updateDevoteeById(devotee, id);
-	 	
-	 	return ResponseEntity.ok(result);
-	}
-	
-	@DeleteMapping("/deleteStudent/id/{id}")
-	public ResponseEntity<String> deleteDevoteeById(@PathVariable Long id){
-		String message =  poojaService.deleteDevoteeById(id);
-		return ResponseEntity.ok(message);
-	}
-	
-	
-	//DeleteMapping
-	@DeleteMapping("/deleteStudents/{Gotram}")
-	public ResponseEntity<String> deleteStudents( @PathVariable String Gotram) {
-		String result = poojaService.deleteStudent(Gotram);
-		if (result.equals("Devotee Not Found")) {
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(result);
-		}
-		
-		return ResponseEntity.status(HttpStatus.OK).body(result);
-	}
-	
+    @GetMapping("/devotees/dto")
+    public List<DevoteeResponseDTO> getAllDevoteesAsDTO() {
+        return poojaService.getAllDevoteesAsDTO();
+    }
+
+    // ---------- BASIC SEARCHES ----------
+
+    @GetMapping("/allStudents/{gotram}")
+    public List<DevotesNames> getByGotram(
+            @PathVariable("gotram") String gotram) {
+
+        return poojaService.getByGotram(gotram);
+    }
+
+    @GetMapping("/allStudents/nakshatram/{nakshathram}")
+    public List<DevotesNames> getByNakshathram(
+            @PathVariable("nakshathram") String nakshathram) {
+
+        return poojaService.getByNakshathram(nakshathram);
+    }
+
+    @GetMapping("/allStudents/email-search/{email}")
+    public List<DevotesNames> getByEmail(
+            @PathVariable("email") String email) {
+
+        return poojaService.getDevoteeByEmail(email);
+    }
+
+    @GetMapping("/allStudents/id/{id}")
+    public DevotesNames getById(@PathVariable("id") Long id) {
+        return poojaService.getDevoteeById(id);
+    }
+
+    // ---------- AGE QUERIES ----------
+
+    @GetMapping("/allStudents/age/{age}")
+    public List<DevotesNames> getByAgeGreaterThan(
+            @PathVariable("age") int age) {
+
+        return poojaService.getByAgeGreaterThan(age);
+    }
+
+    @GetMapping("/allStudents/age/query/{age}")
+    public List<DevotesNames> getOlderThanUsingQuery(
+            @PathVariable("age") int age) {
+
+        return poojaService.getOlderThanUsingQuery(age);
+    }
+
+    @GetMapping("/allStudents/ageBetween/{from_age}/{to_age}")
+    public List<DevotesNames> getByAgeBetween(
+            @PathVariable("from_age") int fromAge,
+            @PathVariable("to_age") int toAge) {
+
+        return poojaService.getByAgeBetween(fromAge, toAge);
+    }
+
+    @GetMapping("/allStudents/ageBetweenQuery/{from_age}/{to_age}")
+    public List<DevotesNames> getByAgeBetweenUsingQuery(
+            @PathVariable("from_age") int fromAge,
+            @PathVariable("to_age") int toAge) {
+
+        return poojaService.getByAgeBetweenUsingQuery(fromAge, toAge);
+    }
+
+    // ---------- GOTRAM / RAASHI QUERIES ----------
+
+    @GetMapping("/allStudents/GR/{Gotram}/{Raashi}")
+    public List<DevotesNames> getByGotramAndRaashi(
+            @PathVariable("Gotram") String gotram,
+            @PathVariable("Raashi") String raashi) {
+
+        return poojaService.getByGotramAndRaashi(gotram, raashi);
+    }
+
+    @GetMapping("/allStudents/GRquery/{Gotram}/{Raashi}")
+    public List<DevotesNames> getByGotramAndRaashiUsingQuery(
+            @PathVariable("Gotram") String gotram,
+            @PathVariable("Raashi") String raashi) {
+
+        return poojaService.getByGotramAndRaashiUsingQuery(
+                gotram, raashi
+        );
+    }
+
+    @GetMapping("/allStudents/GON/{Gotram},{Nakshatram}")
+    public List<DevotesNames> getByGotramOrNakshathram(
+            @PathVariable("Gotram") String gotram,
+            @PathVariable("Nakshatram") String nakshathram) {
+
+        return poojaService.getByGotramOrNakshathram(
+                gotram, nakshathram
+        );
+    }
+
+    @GetMapping("/allStudents/GONQuery/{Gotram}/{Nakshatram}")
+    public List<DevotesNames> getByGotramOrNakshathramUsingQuery(
+            @PathVariable("Gotram") String gotram,
+            @PathVariable("Nakshatram") String nakshathram) {
+
+        return poojaService.getByGotramOrNakshathramUsingQuery(
+                gotram, nakshathram
+        );
+    }
+
+    // ---------- GOTRAM TEXT SEARCHES ----------
+
+    @GetMapping("/allStudents/GotramContaining/{text}")
+    public List<DevotesNames> getByGotramContaining(
+            @PathVariable("text") String text) {
+
+        return poojaService.findByGotramContaining(text);
+    }
+
+    @GetMapping("/allStudents/GotramStartingWith/{text}")
+    public List<DevotesNames> getByGotramStartingWith(
+            @PathVariable("text") String text) {
+
+        return poojaService.findByGotramStartingWith(text);
+    }
+
+    @GetMapping("/allStudents/GotramEndingWith/{text}")
+    public List<DevotesNames> getByGotramEndingWith(
+            @PathVariable("text") String text) {
+
+        return poojaService.findByGotramEndingWith(text);
+    }
+
+    @GetMapping("/allStudents/GotramContaingIgnoreCase/{text}")
+    public List<DevotesNames> getByGotramContainingIgnoreCase(
+            @PathVariable("text") String text) {
+
+        return poojaService.findByGotramContainingIgnoreCase(text);
+    }
+
+    // ---------- EXISTENCE AND COUNT ----------
+
+    @GetMapping("/allStudents/EmailExists/{email}")
+    public boolean emailExists(@PathVariable("email") String email) {
+        return poojaService.isEmailExists(email);
+    }
+
+    @GetMapping("/allStudents/countByGotram/{gotram}")
+    public long countByGotram(
+            @PathVariable("gotram") String gotram) {
+
+        return poojaService.countByGotram(gotram);
+    }
+
+    // ---------- PAGINATION + FILTERING + DTO ----------
+
+    @GetMapping("/devotees/by-age")
+    public Page<DevoteeResponseDTO> getDevoteesByAgeBetween(
+            @RequestParam("minage") int minAge,
+            @RequestParam("maxage") int maxAge,
+            Pageable pageable) {
+
+        return poojaService.getDevoteesByAgeBetween(
+                minAge, maxAge, pageable
+        );
+    }
+
+    // ---------- CREATE ----------
+
+    @PostMapping("/devotees/create")
+    public ResponseEntity<DevoteeResponseDTO> createDevotee(
+            @Valid @RequestBody CreateDevoteeRequestDTO request) {
+
+        DevoteeResponseDTO response =
+                poojaService.createDevotee(request);
+
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(response);
+    }
+
+    // Older entity-based endpoints retained for compatibility.
+    @PostMapping("/addStudent")
+    public ResponseEntity<DevotesNames> addStudent(
+            @Valid @RequestBody DevotesNames request) {
+
+        DevotesNames saved = poojaService.saveDevotee(request);
+
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(saved);
+    }
+
+    @PostMapping("/createStudents")
+    public ResponseEntity<DevotesNames> createStudent(
+            @Valid @RequestBody DevotesNames request) {
+
+        DevotesNames saved = poojaService.saveDevotee(request);
+
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(saved);
+    }
+
+    // ---------- UPDATE ----------
+
+    @PutMapping("/updateStudents/id/{id}")
+    public ResponseEntity<DevotesNames> updateById(
+            @Valid @RequestBody DevotesNames request,
+            @PathVariable("id") Long id) {
+
+        DevotesNames updated =
+                poojaService.updateDevoteeById(request, id);
+
+        return ResponseEntity.ok(updated);
+    }
+
+    @PutMapping("/updateStudents/{raashi}")
+    public ResponseEntity<List<DevotesNames>> updateByRaashi(
+            @RequestBody DevotesNames request,
+            @PathVariable("raashi") String raashi) {
+
+        poojaService.updateDevoteeByRaashi(request, raashi);
+
+        // Preserve the existing endpoint's list response.
+        return ResponseEntity.ok(poojaService.getAllDetails());
+    }
+
+    // ---------- DELETE ----------
+
+    @DeleteMapping("/deleteStudent/id/{id}")
+    public ResponseEntity<String> deleteById(
+            @PathVariable("id") Long id) {
+
+        String message = poojaService.deleteDevoteeById(id);
+
+        return ResponseEntity.ok(message);
+    }
+
+    @DeleteMapping("/deleteStudents/{Gotram}")
+    public ResponseEntity<String> deleteByGotram(
+            @PathVariable("Gotram") String gotram) {
+
+        String message =
+                poojaService.deleteDevoteeByGotram(gotram);
+
+        if ("Devotee Not Found".equals(message)) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(message);
+        }
+
+        return ResponseEntity.ok(message);
+    }
 }
