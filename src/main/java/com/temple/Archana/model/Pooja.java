@@ -24,6 +24,10 @@ public class Pooja {
 		@JoinColumn(name = "devotee_id")
 		private DevotesNames devotee;
 		
+		public Pooja(){
+			
+		}
+		
 		public Pooja(String poojaName,Double amount,DevotesNames devotee) {
 			this.poojaName=poojaName;
 			this.amount=amount;

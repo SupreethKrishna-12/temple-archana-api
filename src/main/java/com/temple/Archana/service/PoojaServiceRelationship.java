@@ -1,6 +1,7 @@
 package com.temple.Archana.service;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.temple.Archana.exception.DevoteeNotFoundException;
 import com.temple.Archana.model.DevotesNames;
@@ -28,9 +29,20 @@ public class PoojaServiceRelationship {
 		pooja.setPoojaName(poojaName);
 		pooja.setDevotee(devotee);
 	
-		return poojaRepository.save(pooja);
-		
-		
+		return poojaRepository.save(pooja);		
+	}
+	
+	public DevotesNames getDevoteewithPoojas(Long id) {
+		DevotesNames result = devoteeRepository.findById(id).orElseThrow(() -> new DevoteeNotFoundException("Devotee with id "+id+" not found"));
+		System.out.println("Pooja Count = "+result.getPoojas().size());
+		return result;
+	}
+	
+	@Transactional
+	public void testdirtychecking(Long id) {
+	 DevotesNames devotee = devoteeRepository.findById(id).orElseThrow(() -> new DevoteeNotFoundException("Devotee with id "+id+" Not found"));
+	  devotee.setAge(40);
+	 
 	}
 	
 }
